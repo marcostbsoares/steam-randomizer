@@ -1,0 +1,66 @@
+:root{
+    --color1: #1D232D;
+    --color2: #353F54;
+    --color3: #4B5672;
+    --color4: #8196A8;
+    --color5: #F5F5F5;
+}
+
+body{
+    background-color: var(--color1);
+    color: var(--color3);
+    font-family: 'Fira Sans', sans-serif;
+}
+
+h1{
+    text-align:center;
+    margin: 25px;
+    color: var(--color5);
+}
+
+form{
+    display: block;
+    align-self: center;
+    margin: auto auto;
+}
+
+p{
+    color: var(--color3);
+}
+
+h2{
+    color: var(--color4);
+    opacity: 0;
+    -webkit-transition: opacity 1.5s linear;
+    -moz-transition: opacity 1.5s linear;
+    transition: opacity 1.5s linear;
+    text-align: center;
+}
+
+.show{
+    opacity: 1;
+}
+
+.jumbotron h1{
+    color: var(--color1);
+}
+
+.jumbotron h2{
+    color: var(--color2);
+}
+
+#headerTron{
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+#idInput{
+    max-width: 200px;
+    margin: auto auto;
+}
+
+#submit-btn{
+    width: 14%;
+    margin: 0 43%;
+    align-self: center;
+}

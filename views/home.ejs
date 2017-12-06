@@ -1,0 +1,24 @@
+<%- include partials/header.ejs %>
+
+<h1>Steam Randomizer</h1>
+
+<div class="container">
+<div class="jumbotron">
+    <p>Have tons of games in your steam library but don't still don't know what to play? We can help you with that!</p>
+    <p>Steam Randomizer uses your publicly available Steam Profile to help you choose a random game to play from the ones you own.</p>
+    <p>To get started, insert your public <strong>Steam Profile ID</strong> in the box below, click Randomize and receive a random game instantly!</p>
+    <form action="/randomize" method="GET">
+        <div class="form-group">
+            <input type="text" class="form-control centered" id="idInput" placeholder="Enter SteamID" name="id">
+        </div>
+        <div class="form-group">
+            <button id="submit-btn" class="centered btn btn-primary">Randomize</button>
+        </div>
+    </form>
+</div>
+</div>
+
+<%- include partials/footer.ejs %>
+
+</body>
+</html>

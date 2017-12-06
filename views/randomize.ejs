@@ -1,0 +1,21 @@
+<%- include partials/header.ejs %>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>The gods have spoken! Go play a bit of</h1>
+        <h2 id="gameName"><%= data[Math.floor(Math.random() * data.length)] %></h2>
+    </div>
+    <div class="jumbotron">
+        <h1>Owned Games</h1>
+        <ul>
+        <% data.forEach(function(game){ %>
+            <li><%= game %></li>
+        <% }); %>
+        </ul>
+    </div>
+</div>
+
+<%- include partials/footer.ejs %>
+<script src="scripts/randomize.js"></script>
+</body>
+</html>
