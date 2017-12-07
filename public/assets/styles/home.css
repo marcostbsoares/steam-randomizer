@@ -70,3 +70,15 @@ h2{
 .footerText{
     text-align: center;
 }
+
+#hint{
+    text-decoration: underline;
+}
+
+#hint:hover{
+    color: var(--color4);
+}
+
+.popover{
+    max-width: 400px;
+}

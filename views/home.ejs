@@ -6,7 +6,7 @@
 <div class="jumbotron">
     <p>Have tons of games in your steam library but don't still don't know what to play? We can help you with that!</p>
     <p>Steam Randomizer uses your publicly available Steam Profile to help you choose a random game to play from the ones you own.</p>
-    <p>To get started, insert your public <strong>Steam Profile ID</strong> in the box below, click Randomize and receive a random game instantly!</p>
+    <p>To get started, insert your public <strong>Steam Profile ID, URL, or Custom URL <span id="hint" data-toggle="popover" data-placement="top" title="Finding your Steam ID" data-html="true" data-content="This is not your Steam nickname or username, but the link to your community profile page. It should look like this: <strong>http://steamcommunity.com/id/yournamehere/</strong><br><strong>https://steamcommunity.com/profiles/7235162853115</strong>">(?)<span></strong> in the box below, click Randomize and receive a random game instantly!</p>
     <form action="/randomize" method="GET">
         <div class="form-group">
             <input type="text" class="form-control centered" id="idInput" placeholder="Enter SteamID" name="id">
@@ -19,6 +19,6 @@
 </div>
 
 <%- include partials/footer.ejs %>
-
+<script src="scripts/home.js"></script>
 </body>
 </html>
