@@ -1,9 +1,10 @@
 <%- include partials/header.ejs %>
 
-<div class="container">
+<div class="container text-center">
     <div class="jumbotron" id="headertron">
         <h1>The gods have spoken! Go play a bit of</h1>
         <h2 id="gameName"><%= data[Math.floor(Math.random() * data.length)] %></h2>
+        <button class="btn btn-primary" id="reroll-btn"><svg class="custom-icon"><use xlink:href="/assets/icons/icons.svg#dice"></use></svg> Roll Again?</button>
     </div>
     <div class="jumbotron">
         <h1>Owned Games</h1>
@@ -16,6 +17,7 @@
 </div>
 
 <%- include partials/footer.ejs %>
+<script> var data = "<%- String(data) %>"; </script>
 <script src="scripts/randomize.js"></script>
 </body>
 </html>

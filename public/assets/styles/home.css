@@ -77,6 +77,11 @@ h2{
     
 }
 
+ul{
+    list-style-type: none;
+    padding: 0 0;
+}
+
 #hint:hover{
     color: var(--color4);
 }
@@ -94,12 +99,16 @@ h2{
 
 .custom-icon-btn{
     display: flex;
-    
     width: 1em;
     height: 1em;
     vertical-align: middle;
     align-self: center;
-    margin-right: 4px;
-    
+    margin-right: 4px;    
     fill: currentColor;
+}
+
+#reroll-btn{
+    margin-top: 24px;
+    margin-bottom: 24px;
+    width: 140px;
 }

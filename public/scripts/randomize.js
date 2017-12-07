@@ -8,22 +8,67 @@ var randomPhrases = [
     "Picking a perfect passtime",
 ]
 
+var isRolling = true;
+$("#reroll-btn").css("display", "none");
 
-setTimeout(function(){
+var games = data.split(',');
+
+setTimeout(function()
+{
     var storedGameName = $("#gameName").text();
     var randomPhrase = randomPhrases[Math.floor(Math.random() * randomPhrases.length)];
     
-    $("#gameName").text("..." + randomPhrase + "...");
+    $("#gameName").text(randomPhrase + "...");
     $("#gameName").addClass("show");
 
-    setTimeout(function () {
+    setTimeout(function () 
+    {
         $("#gameName").removeClass("show");
-
-        setTimeout(function () {
+        setTimeout(function () 
+        {
             $("#gameName").text(storedGameName);
             $("#gameName").addClass("show");
-        }, 1000);
-    }, 1000);
+            $("#reroll-btn").show("slow");
+            isRolling = false;
+        }, 1500);
+
+    }, 2000);
 
 }, 1000);
 
+$("#reroll-btn").click(reRoll);
+
+function reRoll()
+{
+    if(isRolling)
+        return;
+
+    let btn = $("#reroll-btn");
+    btn.addClass("disabled");
+
+    isRolling = true;
+
+    //Fadeout current text
+    var gameName = $("#gameName");
+    var newName = games[Math.floor(Math.random() * games.length)];
+    gameName.removeClass("show");
+
+    setTimeout(function()
+    {
+        //Show randomizing text
+        var randomPhrase = randomPhrases[Math.floor(Math.random() * randomPhrases.length)];
+        gameName.text(randomPhrase + "...");
+        gameName.addClass("show");
+        setTimeout(function()
+        {
+            gameName.removeClass("show");
+            setTimeout(function () 
+            {
+                gameName.text(newName);
+                gameName.addClass("show");
+                isRolling = false;
+                btn.removeClass("disabled");
+            }, 1500);
+        }, 1500)
+    }, 1000);
+}

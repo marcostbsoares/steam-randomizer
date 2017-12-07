@@ -62,8 +62,6 @@ var utils = {
     },
 };
 
-
-
 ///////////////////////////
 ///Randomize Page Functions
 ///////////////////////////
@@ -115,7 +113,6 @@ async function validateID(userID) {
     if (id64Pattern.test(userID))
         return userID;
 
-    
     //Probably is custom URL. Try fetching data from xml
     //Is full URL? Extract username from it. If not, assume it's already the username by itself.
     var parsedURL = userID;
@@ -124,7 +121,6 @@ async function validateID(userID) {
         var results = fullUrlPattern.exec(userID);
         parsedURL = results["1"];
     }
-
 
     var xmlProfile = {};
 
