@@ -62,7 +62,7 @@ h2{
 }
 
 #submit-btn{
-    width: 110px;
+    width: 130px;
     margin: 0 auto;
     align-self: center;
 }
@@ -72,7 +72,9 @@ h2{
 }
 
 #hint{
-    text-decoration: underline;
+    /* //text-decoration: underline; */
+    border-bottom: 1px dashed currentColor;
+    
 }
 
 #hint:hover{
@@ -81,4 +83,23 @@ h2{
 
 .popover{
     max-width: 400px;
+}
+
+.custom-icon{
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+}
+
+.custom-icon-btn{
+    display: flex;
+    
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    align-self: center;
+    margin-right: 4px;
+    
+    fill: currentColor;
 }
