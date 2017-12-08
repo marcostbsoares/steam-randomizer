@@ -11,13 +11,14 @@ var express = require("express")
 var namesDB = JSON.parse(fs.readFileSync("private/steamdb.json", { encoding: "utf-8"}));
 
 ///////////////////////
-// INITIALIZE SETTINGS
+// INITIALIZE SETTINGS AND VARIABLES
 ///////////////////////
 var app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser({ extended: true}));
 app.use(express.static("public"));
 
+var apiKey = "A7D0B730D9B110FE11D87D6BD2975589";
 ///////////////////////
 // DATABASE CONNECTION
 ///////////////////////
@@ -41,7 +42,6 @@ app.get("/randomize", getRandomize);
 app.listen(3000, function(){
     console.log("Steam Randomizer is UP and RUNNING!")
 });
-
 
 ///////////////
 // UTILITIES
@@ -78,25 +78,29 @@ async function getRandomizeAsync(req, res)
 
     let maxPlaytime = 0;
 
+    //Default max playtime to zero if not specified
     if(req.query.min === undefined || req.query.min == ""){
         maxPlaytime = 0;
     }
     else{
-        maxPlaytime = Number(req.query.min);
+        maxPlaytime = Math.max([0, Number(req.query.min)]);
     }
 
-    var userID = req.query.id;
-
-    //Validate ID 
-    //then, Request game list from steamAPI
-    //then, render page
+    //Extract id from query
+    let userID = req.query.id;
 
     try
     {
-        let ID = await validateID(userID);
-        if(ID !== null)
+        userID = await validateID(userID);
+        if(userID !== null)
         {
-            let gameList = await requestGamesList(ID, maxPlaytime);
+            //Obtain game list
+            let gameList = await requestGamesList(userID, maxPlaytime);
+
+            //Randomize a game from the list
+            let game = gameList[Math.floor(Math.random() * gameList.length)];
+            let achievStats = await getAchievData(game.appID, userID);
+
             res.render("randomize", { data: gameList });    
         }
         else
@@ -110,6 +114,7 @@ async function getRandomizeAsync(req, res)
     }
 }
 
+//Extracts a SteamID64 from a string containing the ID or custom URL in any format
 async function validateID(userID) {
 
     //Is URL with ID64 in it
@@ -145,7 +150,7 @@ async function validateID(userID) {
     return null;
 }
 
-//Obtains a SteamID64 from a custom URL xml
+//Obtains a SteamID64 from a custom URL xml, returns null if unable to obtain
 async function getIdFromURL(parsedURL){
     
     var finalURL;
@@ -154,10 +159,6 @@ async function getIdFromURL(parsedURL){
         if (!err && response.statusCode == 200) 
         {
             xmlProfile = xmljs.xml2js(body, { compact: true});
-
-            //var steamID64 = xmlProfile.find("steamID64");
-            console.log("parsed url: " + parsedURL);
-            
             try{
                 finalURL = xmlProfile.profile.steamID64._text;
                 return finalURL;
@@ -183,8 +184,8 @@ async function getIdFromURL(parsedURL){
 }
 
 async function requestGamesList(finalID, maxPlaytime){
-    var gameNames = [];
-    await(request("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A7D0B730D9B110FE11D87D6BD2975589&steamid=" + finalID + "&format=json", function (error, code, body) 
+    let gamesList = [];
+    await(request("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" + apiKey + "&steamid=" + finalID + "&format=json", function (error, code, body) 
     {
         if (error) 
         {
@@ -202,14 +203,15 @@ async function requestGamesList(finalID, maxPlaytime){
                     return;
                 }
 
-                var id = String(game.appid);
+                let id = String(game.appid);
 
                 if (namesDB.data[id] !== undefined) 
                 {
-                    var name = namesDB.data[id];
+                    let name = namesDB.data[id];
                     if (utils.validateName(name)) 
                     {
-                        gameNames.push(name);
+                        let newGame = { name: name, appID: id}
+                        gamesList.push(newGame);
                     }
                 }
             });
@@ -218,9 +220,81 @@ async function requestGamesList(finalID, maxPlaytime){
         {
             return null;
         }
-        return gameNames;
+        return gamesList;
     }));
 
-    gameNames.sort();
-    return gameNames;
+    //gamesList.sort();
+    return gamesList;
+}
+
+//Obtains Global Achievement Data, User Stats and Game Schema from Steam API
+async function getAchievData(appID, userID)
+{
+    let fullAchievData = {
+        globalAchievData: {},
+        userAchievData: {},
+        gameSchema: {},
+    }
+
+    fullAchievData.globalAchievData = await getGlobalAchievementDataAsync(appID);
+    fullAchievData.userAchievData = await getUserAchievementDataAsync(appID, userID);
+    fullAchievData.gameSchema = await getGameSchema(appID);
+
+    return fullAchievData;
+}
+
+async function getGlobalAchievementDataAsync(appID){
+
+    let achievData = {};
+    let achievObject = [];
+
+    await request("http://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=" + appID + "&format=json", function(err, response, body){
+        if(!err && response.statusCode == 200)
+        {
+            achievData = JSON.parse(body);
+        }
+        else{
+            achievData = null;
+        }
+    });
+
+    //Separates achievements into tiers based on percentage of all users completed
+    if(achievData != null)
+    {
+        achievData.achievementpercentages.achievements.forEach(function(achievement){
+            let newAchiev = { tier: "", name: achievement.name};
+
+            if(achievement.percent <= 5)
+                newAchiev.tier = "expert";
+            else if (achievement.percent <= 15)
+                newAchiev.tier = "hard";
+            else if (achievement.percent <= 30)
+                newAchiev.tier = "medium";
+            else
+                newAchiev.tier = "easy";
+            
+            achievObject.push(newAchiev);
+        });
+    }
+
+    return achievObject;
+}
+
+async function getUserAchievementDataAsync(appID, userID){
+    let userStats = {};
+    await request("http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=" + appID + "&key=" + apiKey + "&steamid=" + userID, function(error, response, body){
+        if (!error && response.statusCode == 200)
+            userStats = JSON.parse(body);
+    });
+}
+
+async function getGameSchema(appID){
+    let gameSchema = {};
+    await request("http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=" + apiKey + "&appid=" + appID, function(error, response, body){
+        if(!error && response.statusCode == 200)
+        {
+            gameSchema = JSON.parse(body);
+        }
+    });
+    return gameSchema;
 }
