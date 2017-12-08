@@ -144,3 +144,7 @@ ul{
     text-align: center;
     color: var(--color2);
 }
+
+.flip_vertical{
+    transform: scaleY(-1);
+}
