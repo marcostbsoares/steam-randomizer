@@ -58,7 +58,6 @@ h2{
 
 #idInput{
     max-width: 200px;
-    margin: auto auto;
 }
 
 #submit-btn{
@@ -71,7 +70,7 @@ h2{
     text-align: center;
 }
 
-#hint{
+.hint{
     /* //text-decoration: underline; */
     border-bottom: 1px dashed currentColor;
     
@@ -82,7 +81,7 @@ ul{
     padding: 0 0;
 }
 
-#hint:hover{
+.hint:hover{
     color: var(--color4);
 }
 
@@ -114,10 +113,34 @@ ul{
 }
 
 #minutesInput{
-    margin-left: 8px;
-    max-width: 70px;
+    max-width: 90px;
 }
 
 #min_label{
     margin: auto 0;
+}
+
+.input-group{
+    margin-bottom: 12px;
+}
+
+.input-group-addon{
+    background-color: var(--color5);
+}
+
+.diffLabel{
+    width: 100px;
+}
+
+.diffLabel input{
+    margin-left: auto;
+}
+
+.jumbotron h1{
+    color: var(--color2);
+}
+
+.jumbotron h4{
+    text-align: center;
+    color: var(--color2);
 }

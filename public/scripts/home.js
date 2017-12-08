@@ -1,5 +1,5 @@
-$("#hint").popover();
+$(".hint").popover();
 
-$("#hint").click(function(){
+$(".hint").click(function(){
     $(this).popover();
 })
