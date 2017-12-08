@@ -148,3 +148,7 @@ ul{
 .flip_vertical{
     transform: scaleY(-1);
 }
+
+#gauntlet_title:hover{
+    color: var(--color4);
+}
