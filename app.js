@@ -76,6 +76,15 @@ async function getRandomizeAsync(req, res)
         return;
     }
 
+    let maxPlaytime = 0;
+
+    if(req.query.min === undefined || req.query.min == ""){
+        maxPlaytime = 0;
+    }
+    else{
+        maxPlaytime = Number(req.query.min);
+    }
+
     var userID = req.query.id;
 
     //Validate ID 
@@ -87,7 +96,7 @@ async function getRandomizeAsync(req, res)
         let ID = await validateID(userID);
         if(ID !== null)
         {
-            let gameList = await requestGamesList(ID);
+            let gameList = await requestGamesList(ID, maxPlaytime);
             res.render("randomize", { data: gameList });    
         }
         else
@@ -142,18 +151,20 @@ async function getIdFromURL(parsedURL){
     var finalURL;
     try{
     await request("http://steamcommunity.com/id/" + parsedURL + "/?xml=1", function (err, response, body) {
-        if (!err && response.statusCode == 200) {
+        if (!err && response.statusCode == 200) 
+        {
             xmlProfile = xmljs.xml2js(body, { compact: true});
 
             //var steamID64 = xmlProfile.find("steamID64");
             console.log("parsed url: " + parsedURL);
-            if(xmlProfile === undefined && xmlProfile.steamID64 === undefined){
-                finalURL = null;
-                return null;
-            }
-            else{
+            
+            try{
                 finalURL = xmlProfile.profile.steamID64._text;
                 return finalURL;
+            }
+            catch(err){
+                finalURL = null;
+                return null;
             }
         }
         else {
@@ -171,7 +182,7 @@ async function getIdFromURL(parsedURL){
     
 }
 
-async function requestGamesList(finalID){
+async function requestGamesList(finalID, maxPlaytime){
     var gameNames = [];
     await(request("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=A7D0B730D9B110FE11D87D6BD2975589&steamid=" + finalID + "&format=json", function (error, code, body) 
     {
@@ -186,8 +197,10 @@ async function requestGamesList(finalID){
 
             data.response.games.forEach(function (game)
              {
-                if (game.playtime_forever > 1000)
+                if (game.playtime_forever > maxPlaytime)
+                {
                     return;
+                }
 
                 var id = String(game.appid);
 
