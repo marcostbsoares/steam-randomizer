@@ -94,14 +94,15 @@ async function getRandomizeAsync(req, res)
         userID = await validateID(userID);
         if(userID !== null)
         {
-            //Obtain game list
+            //Obtain game list            
             let gameList = await requestGamesList(userID, maxPlaytime);
 
             //Randomize a game from the list
             let game = gameList[Math.floor(Math.random() * gameList.length)];
             let achievStats = await getAchievData(game.appID, userID);
+            let randomAchiev = parseAchievement(achievStats, ["easy", "hard"]);
 
-            res.render("randomize", { data: gameList });    
+            res.render("randomize", { game: game, achiev: randomAchiev });    
         }
         else
         {
@@ -237,7 +238,9 @@ async function getAchievData(appID, userID)
     }
 
     fullAchievData.globalAchievData = await getGlobalAchievementDataAsync(appID);
+    try{
     fullAchievData.userAchievData = await getUserAchievementDataAsync(appID, userID);
+    } catch(err) {}
     fullAchievData.gameSchema = await getGameSchema(appID);
 
     return fullAchievData;
@@ -297,4 +300,43 @@ async function getGameSchema(appID){
         }
     });
     return gameSchema;
+}
+
+function parseAchievement(achievement, diffOptions)
+{
+    try{
+        //Get a list of all achievements matching difficulties
+        let matchingAchievements = [];
+        achievement.globalAchievData.forEach(function(achiev){
+            if(diffOptions.indexOf(achiev.tier) >= 0)
+            {
+                matchingAchievements.push(achiev.name);
+            }
+        });
+
+        //Remove all achievements that player has already completed, if any data is found
+        if(achievement.userAchievData != undefined)
+        {
+            achievement.userAchievData.playerstats.achievements.forEach(function(achiev){
+                if(achiev.achieved == 1)
+                {
+                    let ind = matchingAchievements.indexOf(achiev.name);
+                    if(ind >= 0)
+                        matchingAchievements.splice(ind, 1);
+                }
+            });
+        }
+
+        //Randomize an achievement
+        let randomAchiev = matchingAchievements[Math.floor(Math.random() * matchingAchievements.length)];
+
+        //Generate object with matching information from Schema
+        let finalObj = achievement.gameSchema.game.availableGameStats.achievements.find(gm => gm.name == randomAchiev);
+        console.log(finalObj);
+        return finalObj;
+    }
+    catch(err){
+        console.log(err);
+        return null;
+    }
 }

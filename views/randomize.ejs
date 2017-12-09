@@ -3,21 +3,28 @@
 <div class="container text-center">
     <div class="jumbotron" id="headertron">
         <h1>The gods have spoken! Go play a bit of</h1>
-        <h2 id="gameName"><%= data[Math.floor(Math.random() * data.length)] %></h2>
+        <h2 id="gameName"><%= game.name %></h2>
         <button class="btn btn-primary" id="reroll-btn"><svg class="custom-icon"><use xlink:href="/assets/icons/icons.svg#dice"></use></svg> Roll Again?</button>
     </div>
-    <div class="jumbotron">
-        <h1>Owned Games</h1>
-        <ul>
-        <% data.forEach(function(game){ %>
-            <li><%= game %></li>
-        <% }); %>
-        </ul>
+    <% if(achiev != undefined){ %>
+    <div id="achiev-card" class="card">
+        <h4 class="card-title">Your achievement:</h4>
+        <div class="row no-gutters">
+            <div class="col-3">
+                <img class="achiev-icon d-flex" src="<%= achiev.icon %>">
+            </div>
+            <div class="col-9">
+                <p class="card-text"><strong><%= achiev.displayName; %></strong>
+                    <br>
+                    <%= achiev.description; %>
+                </p>
+            </div>
+        </div>
     </div>
+    <% }; %>
 </div>
 
 <%- include partials/footer.ejs %>
-<script> var data = "<%- String(data) %>"; </script>
 <script src="scripts/randomize.js"></script>
 </body>
 </html>

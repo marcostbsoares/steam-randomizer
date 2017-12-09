@@ -152,3 +152,21 @@ ul{
 #gauntlet_title:hover{
     color: var(--color4);
 }
+
+.card{
+    width: 400px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    margin: 0 auto;
+}
+
+.achiev-icon{
+    border: 2px solid var(--color4);
+    display:flex;
+    margin: auto auto;
+}
+
+#achiev-card div .col-9{
+    padding-right: 8px;
+    border: 2px solid var(--color4);
+}

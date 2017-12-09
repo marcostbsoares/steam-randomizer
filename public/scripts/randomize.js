@@ -10,8 +10,7 @@ var randomPhrases = [
 
 var isRolling = true;
 $("#reroll-btn").css("display", "none");
-
-var games = data.split(',');
+$("#achiev-card").hide(1);
 
 setTimeout(function()
 {
@@ -29,6 +28,7 @@ setTimeout(function()
             $("#gameName").text(storedGameName);
             $("#gameName").addClass("show");
             $("#reroll-btn").show("slow");
+            $("#achiev-card").slideToggle("slow");
             isRolling = false;
         }, 1500);
 
@@ -40,35 +40,35 @@ $("#reroll-btn").click(reRoll);
 
 function reRoll()
 {
-    if(isRolling)
-        return;
+    // if(isRolling)
+    //     return;
 
-    let btn = $("#reroll-btn");
-    btn.addClass("disabled");
+    // let btn = $("#reroll-btn");
+    // btn.addClass("disabled");
 
-    isRolling = true;
+    // isRolling = true;
 
-    //Fadeout current text
-    var gameName = $("#gameName");
-    var newName = games[Math.floor(Math.random() * games.length)];
-    gameName.removeClass("show");
+    // //Fadeout current text
+    // var gameName = $("#gameName");
+    // var newName = games[Math.floor(Math.random() * games.length)];
+    // gameName.removeClass("show");
 
-    setTimeout(function()
-    {
-        //Show randomizing text
-        var randomPhrase = randomPhrases[Math.floor(Math.random() * randomPhrases.length)];
-        gameName.text(randomPhrase + "...");
-        gameName.addClass("show");
-        setTimeout(function()
-        {
-            gameName.removeClass("show");
-            setTimeout(function () 
-            {
-                gameName.text(newName);
-                gameName.addClass("show");
-                isRolling = false;
-                btn.removeClass("disabled");
-            }, 1500);
-        }, 1500)
-    }, 1000);
+    // setTimeout(function()
+    // {
+    //     //Show randomizing text
+    //     var randomPhrase = randomPhrases[Math.floor(Math.random() * randomPhrases.length)];
+    //     gameName.text(randomPhrase + "...");
+    //     gameName.addClass("show");
+    //     setTimeout(function()
+    //     {
+    //         gameName.removeClass("show");
+    //         setTimeout(function () 
+    //         {
+    //             gameName.text(newName);
+    //             gameName.addClass("show");
+    //             isRolling = false;
+    //             btn.removeClass("disabled");
+    //         }, 1500);
+    //     }, 1500)
+    // }, 1000);
 }
