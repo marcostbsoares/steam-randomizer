@@ -162,11 +162,23 @@ ul{
 
 .achiev-icon{
     border: 2px solid var(--color4);
-    display:flex;
+    display:inline-flex;
+    width : 68px;
+    float:left;
+    box-sizing: border-box;
+    margin: 0 5% 0 5%;
+}
+
+#achiev-text{
+    display: inline-flex;
+    float:left;
+    width: 260px;
+    height: 68px;
+    box-sizing: border-box;
     margin: auto auto;
 }
 
-#achiev-card div .col-9{
-    padding-right: 8px;
-    border: 2px solid var(--color4);
+.card-text{
+    align-self: center;
+    margin: 0 auto;
 }

@@ -9,11 +9,11 @@
     <% if(achiev != undefined){ %>
     <div id="achiev-card" class="card">
         <h4 class="card-title">Your achievement:</h4>
-        <div class="row no-gutters">
-            <div class="col-3">
+        <div>
+            <div>
                 <img class="achiev-icon d-flex" src="<%= achiev.icon %>">
             </div>
-            <div class="col-9">
+            <div id="achiev-text">
                 <p class="card-text"><strong><%= achiev.displayName; %></strong>
                     <br>
                     <%= achiev.description; %>
