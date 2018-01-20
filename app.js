@@ -6,36 +6,49 @@ var express = require("express")
 ,   bodyParser = require("body-parser")
 ,   request = require("request-promise")
 ,   fs = require("fs")
-,   xmljs = require("xml-js");
+,   xmljs = require("xml-js")
+,   mongoose = require("mongoose");
 
 var namesDB = JSON.parse(fs.readFileSync("private/steamdb.json", { encoding: "utf-8"}));
+var config = JSON.parse(fs.readFileSync("config.json"));
 
 ///////////////////////
 // INITIALIZE SETTINGS AND VARIABLES
 ///////////////////////
+
+
 var app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser({ extended: true}));
 app.use(express.static("public"));
 
+
+
 var apiKey = "A7D0B730D9B110FE11D87D6BD2975589";
+
 ///////////////////////
 // DATABASE CONNECTION
 ///////////////////////
 
-
+// var db = mongoose.connect("");
+// new db.Model({
+//     username: String,
+// });
 
 //////////
 // ROUTES
 //////////
 
 app.get("/", function(req, res){
-    res.render("home")
-})
+    res.render("home");
+});
 
 app.get("/randomize", getRandomize);
 
 
+app.get("/newUser", function(req, res){
+    res.render("newUser");
+});
 ////////////////
 // START SERVER
 ////////////////
