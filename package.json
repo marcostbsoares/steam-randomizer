@@ -13,7 +13,7 @@
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "jquery": "^3.4.0",
-    "mongoose": "^4.13.7",
+    "mongoose": "^5.7.5",
     "q": "^1.5.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
